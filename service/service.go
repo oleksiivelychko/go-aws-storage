@@ -122,7 +122,7 @@ func (service *service) PutObjectsAsync(bucket string, filenames []string, outCh
 			if err != nil {
 				errCh <- err
 			} else {
-				outCh <- fmt.Sprintf("file %s was uploaded\n%s\n", filename, output.String())
+				outCh <- fmt.Sprintf("file %s was uploaded and available by ETag %s \n", filename, *output.ETag)
 			}
 		}(key)
 	}

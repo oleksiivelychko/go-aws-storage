@@ -22,6 +22,17 @@ go run main.go --config=config.yaml list-buckets
 ```
 ---
 
+- put object via AWS CLI
+```
+aws s3api put-object --bucket my-bucket --key sample.png --body sample.png \
+    --endpoint-url http://localhost:4566 --profile localstack
+```
+- put object via CLI
+```
+go run main.go put-objects --bucket=my-bucket --key=sample_1.png --key=sample_2.png
+```
+---
+
 ---
 ※ References:
 - [s3api](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/index.html)
