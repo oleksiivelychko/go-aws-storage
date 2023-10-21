@@ -1,16 +1,21 @@
 package cmd
 
 import (
-	"fmt"
+	"github.com/oleksiivelychko/go-aws-storage/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
 )
 
-var cfgFile string
+const SuccessfulMessage = "✅ Operation has been successful!"
+
+var (
+	cfgFile string
+	cfgAWS  *config.AWS
+)
 
 var rootCmd = &cobra.Command{
-	Short: "A brief description of your application",
+	Short: "Simple Storage Service (S3).",
 }
 
 func Execute() {
@@ -29,7 +34,16 @@ func initConfig() {
 	viper.SetConfigFile(cfgFile)
 	viper.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err == nil {
-		_, _ = fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	err := viper.ReadInConfig()
+	if err != nil {
+		cobra.CheckErr(err)
+	}
+
+	cfgAWS = &config.AWS{
+		Region:             viper.Get("REGION").(string),
+		AwsAccessKeyId:     viper.Get("AWS_ACCESS_KEY_ID").(string),
+		AwsSecretAccessKey: viper.Get("AWS_SECRET_ACCESS_KEY").(string),
+		Endpoint:           viper.Get("ENDPOINT").(string),
+		S3ForcePathStyle:   viper.Get("S3_FORCE_PATH_STYLE").(bool),
 	}
 }
