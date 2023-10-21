@@ -22,7 +22,6 @@ import (
 
 const (
 	bucketPrefix             = "s3://"
-	bucketNameRegex          = "^[a-z0-9\\-]{3,50}$"
 	defaultProtectedRegion   = "us-east-1"
 	MinutesToExpireSignedURL = 15
 )
@@ -75,13 +74,13 @@ func (service *service) ListBuckets() (string, error) {
 }
 
 func (service *service) CreateBucket(name string, isPublic bool) (string, error) {
-	match, _ := regexp.MatchString(bucketNameRegex, name)
+	match, _ := regexp.MatchString("^[a-z0-9\\-]{3,50}$", name)
 	if !match {
 		return "", fmt.Errorf("bucket name \"%s\" is not applicable", name)
 	}
 
 	var bucketConfig *s3.CreateBucketConfiguration
-	if *service.client.Config.Region != defaultProtectedRegion {
+	if *service.client.Config.Region != "us-east-1" {
 		bucketConfig.LocationConstraint = service.client.Config.Region
 	}
 
@@ -129,7 +128,7 @@ func (service *service) PutObjectsAsync(bucket string, filenames []string, outCh
 			if err != nil {
 				errCh <- err
 			} else {
-				outCh <- fmt.Sprintf("file %s was uploaded and available by ETag %s \n", filename, *output.ETag)
+				outCh <- fmt.Sprintf("file %s was uploaded and available by ETag %s\n", filename, *output.ETag)
 			}
 		}(key)
 	}
@@ -155,7 +154,8 @@ func (service *service) PutObjects(bucket string, filePaths []string) (output []
 
 func (service *service) ListObjects(bucket string) (string, error) {
 	output, err := service.client.ListObjectsV2(&s3.ListObjectsV2Input{
-		Bucket: aws.String(bucket),
+		Bucket:  aws.String(bucket),
+		MaxKeys: aws.Int64(10000),
 	})
 
 	if err != nil {
