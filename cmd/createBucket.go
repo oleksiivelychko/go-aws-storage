@@ -15,7 +15,7 @@ var createBucketCmd = &cobra.Command{
 			cobra.CheckErr(err)
 		}
 
-		isPublic, err := cmd.Flags().GetBool("isPublic")
+		isPublic, err := cmd.Flags().GetBool("public")
 		if err != nil {
 			cobra.CheckErr(err)
 		}
@@ -31,7 +31,7 @@ var createBucketCmd = &cobra.Command{
 
 func init() {
 	createBucketCmd.Flags().String("name", "", "")
-	createBucketCmd.Flags().Bool("isPublic", false, "make bucket a public (read-only)")
+	createBucketCmd.Flags().Bool("public", false, "make bucket a public (read-only)")
 
 	_ = createBucketCmd.MarkFlagRequired("name")
 
