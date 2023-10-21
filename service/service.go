@@ -32,7 +32,7 @@ type IService interface {
 	PutObjectsAsync(bucket string, filenames []string, outCh chan string, errCh chan error)
 	PutObjects(bucket string, filePaths []string) (output []string, errArr []error)
 	ListObjects(bucket string) (string, error)
-	GetObject(bucket, key, path string) (string, error)
+	GetObject(bucket, key, path string) error
 	DeleteObject(bucket, key string) (string, error)
 	DeleteBucket(bucket string) (string, error)
 	AssignURL(bucket, key string) (string, error)
@@ -196,30 +196,30 @@ func (service *service) putObjects(bucket, filePath string) (*s3.PutObjectOutput
 	})
 }
 
-func (service *service) GetObject(bucket, key, path string) (string, error) {
+func (service *service) GetObject(bucket, key, path string) error {
 	output, err := service.client.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
 
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	body, err := io.ReadAll(output.Body)
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	if path != "" {
 		absPath, absPathErr := filepath.Abs(path)
 		if absPathErr != nil {
-			return "", absPathErr
+			return absPathErr
 		}
 
 		if _, statErr := os.Stat(absPath); os.IsNotExist(statErr) {
 			if err = os.Mkdir(absPath, os.ModePerm); err != nil {
-				return "", err
+				return err
 			}
 		}
 
@@ -228,7 +228,7 @@ func (service *service) GetObject(bucket, key, path string) (string, error) {
 		path = key
 	}
 
-	return output.String(), os.WriteFile(path, body, 0644)
+	return os.WriteFile(path, body, 0644)
 }
 
 func (service *service) DeleteObject(bucket, key string) (string, error) {

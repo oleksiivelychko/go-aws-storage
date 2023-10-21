@@ -147,12 +147,10 @@ func TestListObjects(t *testing.T) {
 func TestGetObject(t *testing.T) {
 	uploadPath := "./../upload"
 
-	output, err := storage.GetObject(testBucket, testFilename, uploadPath)
+	err := storage.GetObject(testBucket, testFilename, uploadPath)
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	t.Log(output)
 
 	if _, err = os.Stat(uploadPath); os.IsNotExist(err) {
 		t.Fatal(err)

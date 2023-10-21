@@ -43,6 +43,17 @@ go run main.go --config=config.yaml list-objects --bucket=my-bucket
 ```
 ---
 
+- get object via AWS CLI
+```
+aws s3api get-object --bucket my-bucket --key sample.png new-sample.png \
+    --endpoint-url http://localhost:4566 --profile localstack OUT_FILENAME
+```
+- get object via CLI
+```
+go run main.go get-object --config=config.yaml --bucket=my-bucket --key=sample.png --path=.
+```
+---
+
 ---
 ※ References:
 - [s3api](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/index.html)
