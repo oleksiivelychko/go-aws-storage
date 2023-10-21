@@ -20,10 +20,7 @@ import (
 	"time"
 )
 
-const (
-	bucketPrefix             = "s3://"
-	MinutesToExpireSignedURL = 15
-)
+const MinutesToExpireSignedURL = 15
 
 type IService interface {
 	ListBuckets() (string, error)
@@ -32,8 +29,8 @@ type IService interface {
 	PutObjects(bucket string, filePaths []string) (output []string, errArr []error)
 	ListObjects(bucket string) (string, error)
 	GetObject(bucket, key, path string) error
-	DeleteObject(bucket, key string) (string, error)
-	DeleteBucket(bucket string) (string, error)
+	DeleteObject(bucket, key string) error
+	DeleteBucket(bucket string) error
 	AssignURL(bucket, key string) (string, error)
 }
 
@@ -230,29 +227,21 @@ func (service *service) GetObject(bucket, key, path string) error {
 	return os.WriteFile(path, body, 0644)
 }
 
-func (service *service) DeleteObject(bucket, key string) (string, error) {
+func (service *service) DeleteObject(bucket, key string) error {
 	_, err := service.client.DeleteObject(&s3.DeleteObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
 
-	if err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf("object %s was deleted from %s%s", key, bucketPrefix, bucket), nil
+	return err
 }
 
-func (service *service) DeleteBucket(bucket string) (string, error) {
+func (service *service) DeleteBucket(bucket string) error {
 	_, err := service.client.DeleteBucket(&s3.DeleteBucketInput{
 		Bucket: aws.String(bucket),
 	})
 
-	if err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf("bucket %s%s was deleted", bucketPrefix, bucket), nil
+	return err
 }
 
 func (service *service) AssignURL(bucket, key string) (string, error) {

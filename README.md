@@ -64,6 +64,26 @@ go run main.go assign-url --config=config.yaml --bucket=my-bucket --key=sample.p
 ```
 ---
 
+- delete object via AWS CLI
+```
+aws s3api delete-object --bucket my-bucket --key sample.png --endpoint-url http://localhost:4566 --profile localstack
+```
+- delete object via CLI
+```
+go run main.go delete-object --config=config.yaml --bucket=my-bucket --key=sample.png
+```
+---
+
+- delete bucket via AWS CLI
+```
+aws s3api delete-bucket --bucket my-bycket --endpoint-url http://localhost:4566 --profile localstack
+```
+- delete bucket via CLI
+```
+go run main.go delete-bucket --config=config.yaml --bucket=my-bucket
+```
+---
+
 ---
 ※ References:
 - [s3api](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/index.html)

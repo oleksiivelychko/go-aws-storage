@@ -174,22 +174,16 @@ func TestAssignURL(t *testing.T) {
 func TestDeleteObject(t *testing.T) {
 	for _, filename := range tmpFiles {
 		splitted := strings.Split(filename, "/")
-
-		output, err := storage.DeleteObject(testBucket, splitted[len(splitted)-1])
+		err := storage.DeleteObject(testBucket, splitted[len(splitted)-1])
 		if err != nil {
 			t.Error(err)
-			continue
 		}
-
-		t.Log(output)
 	}
 }
 
 func TestDeleteBucket(t *testing.T) {
-	output, err := storage.DeleteBucket(testBucket)
+	err := storage.DeleteBucket(testBucket)
 	if err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
-
-	t.Log(output)
 }
