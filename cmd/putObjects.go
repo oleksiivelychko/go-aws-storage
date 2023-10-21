@@ -24,13 +24,13 @@ var putObjectsCmd = &cobra.Command{
 
 		if len(errCh) > 0 {
 			for err := range errCh {
-				fmt.Printf("\n⛔️ %s", err)
+				fmt.Printf("⛔️ %s", err)
 			}
 		}
 
 		if len(outCh) > 0 {
 			for output := range outCh {
-				fmt.Printf("\n✅ %s", output)
+				fmt.Printf("✅ %s", output)
 			}
 		}
 	},
