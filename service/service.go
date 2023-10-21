@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -21,6 +22,7 @@ import (
 
 const (
 	bucketPrefix             = "s3://"
+	bucketNameRegex          = "^[a-z0-9\\-]{3,50}$"
 	defaultProtectedRegion   = "us-east-1"
 	MinutesToExpireSignedURL = 15
 )
@@ -73,6 +75,11 @@ func (service *service) ListBuckets() (string, error) {
 }
 
 func (service *service) CreateBucket(name string, isPublic bool) (string, error) {
+	match, _ := regexp.MatchString(bucketNameRegex, name)
+	if !match {
+		return "", fmt.Errorf("bucket name \"%s\" is not applicable", name)
+	}
+
 	var bucketConfig *s3.CreateBucketConfiguration
 	if *service.client.Config.Region != defaultProtectedRegion {
 		bucketConfig.LocationConstraint = service.client.Config.Region
