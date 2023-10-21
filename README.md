@@ -8,7 +8,7 @@ aws s3api create-bucket --bucket my-bucket --endpoint-url http://localhost:4566 
 ```
 - create bucket via CLI
 ```
-go run main.go --config=config.yaml create-bucket --name=my-bucket [--isPublic=true]
+go run main.go --config=config.yaml create-bucket --name=my-bucket [--public=true]
 ```
 ---
 
@@ -33,7 +33,16 @@ go run main.go put-objects --bucket=my-bucket --key=sample_1.png --key=sample_2.
 ```
 ---
 
+- list objects via AWS CLI
+```
+aws s3api list-objects --bucket my-bucket --endpoint-url http://localhost:4566 --profile localstack
+```
+- list objects via CLI
+```
+go run main.go --config=config.yaml list-objects --bucket=my-bucket
+```
+---
+
 ---
 ※ References:
 - [s3api](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/index.html)
-- [Bucket naming rules](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html)
