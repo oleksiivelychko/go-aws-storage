@@ -22,7 +22,6 @@ import (
 
 const (
 	bucketPrefix             = "s3://"
-	defaultProtectedRegion   = "us-east-1"
 	MinutesToExpireSignedURL = 15
 )
 

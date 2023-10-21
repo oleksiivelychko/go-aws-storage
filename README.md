@@ -54,6 +54,16 @@ go run main.go get-object --config=config.yaml --bucket=my-bucket --key=sample.p
 ```
 ---
 
+- pre-sign URL via AWS CLI
+```
+aws s3 presign s3://BUCKET/KEY --endpoint-url http://localhost:4566 --profile localstack
+```
+- pre-sign URL via CLI
+```
+go run main.go assign-url --config=config.yaml --bucket=my-bucket --key=sample.png
+```
+---
+
 ---
 ※ References:
 - [s3api](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/index.html)
