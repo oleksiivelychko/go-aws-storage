@@ -188,7 +188,7 @@ func (service *service) putObjects(bucket, filePath string) (*s3.PutObjectOutput
 		Bucket:        aws.String(bucket),
 		ContentType:   aws.String(http.DetectContentType(buf)),
 		ContentLength: aws.Int64(size),
-		Key:           aws.String(service.GetKey(filePath)),
+		Key:           aws.String(GetKey(filePath)),
 	})
 }
 
@@ -253,6 +253,6 @@ func (service *service) AssignURL(bucket, key string) (string, error) {
 	return req.Presign(MinutesToExpireSignedURL * time.Minute)
 }
 
-func (service *service) GetKey(filePath string) string {
+func GetKey(filePath string) string {
 	return strings.Split(filePath, "/")[len(strings.Split(filePath, "/"))-1]
 }
