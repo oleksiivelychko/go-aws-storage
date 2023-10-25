@@ -15,17 +15,17 @@ const (
 )
 
 var (
-	storage  IService
-	tmpFiles []string
+	storageService IService
+	tmpFiles       []string
 )
 
 func init() {
-	cfg, err := config.ReadYAML("./../config.yaml")
+	yamlConfig, err := config.ReadYAML("./../config.yaml")
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
 
-	storage, err = New(cfg)
+	storageService, err = New(yamlConfig)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
@@ -71,7 +71,7 @@ func setUp() func() {
 }
 
 func TestCreateBucket(t *testing.T) {
-	output, err := storage.CreateBucket(testBucket, false)
+	output, err := storageService.CreateBucket(testBucket, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,7 +80,7 @@ func TestCreateBucket(t *testing.T) {
 }
 
 func TestListBuckets(t *testing.T) {
-	output, err := storage.ListBuckets()
+	output, err := storageService.ListBuckets()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +92,7 @@ func TestPutObjectsAsync(t *testing.T) {
 	outCh := make(chan string, len(tmpFiles))
 	errCh := make(chan error, len(tmpFiles))
 
-	storage.PutObjectsAsync(testBucket, tmpFiles, outCh, errCh)
+	storageService.PutObjectsAsync(testBucket, tmpFiles, outCh, errCh)
 
 	if len(errCh) > 0 {
 		for err := range errCh {
@@ -111,12 +111,12 @@ func BenchmarkPutObjectsAsync(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		outCh := make(chan string, len(tmpFiles))
 		errCh := make(chan error, len(tmpFiles))
-		storage.PutObjectsAsync(testBucket, tmpFiles, outCh, errCh)
+		storageService.PutObjectsAsync(testBucket, tmpFiles, outCh, errCh)
 	}
 }
 
 func TestPutObjects(t *testing.T) {
-	output, errArr := storage.PutObjects(testBucket, tmpFiles)
+	output, errArr := storageService.PutObjects(testBucket, tmpFiles)
 
 	if len(errArr) > 0 {
 		for _, err := range errArr {
@@ -131,12 +131,12 @@ func TestPutObjects(t *testing.T) {
 
 func BenchmarkPutObjects(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, _ = storage.PutObjects(testBucket, tmpFiles)
+		_, _ = storageService.PutObjects(testBucket, tmpFiles)
 	}
 }
 
 func TestListObjects(t *testing.T) {
-	output, err := storage.ListObjects(testBucket)
+	output, err := storageService.ListObjects(testBucket)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -147,7 +147,7 @@ func TestListObjects(t *testing.T) {
 func TestGetObject(t *testing.T) {
 	uploadPath := "./../upload"
 
-	err := storage.GetObject(testBucket, testFilename, uploadPath)
+	err := storageService.GetObject(testBucket, testFilename, uploadPath)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -163,7 +163,7 @@ func TestGetObject(t *testing.T) {
 }
 
 func TestAssignURL(t *testing.T) {
-	output, err := storage.AssignURL(testBucket, testFilename)
+	output, err := storageService.AssignURL(testBucket, testFilename)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -174,7 +174,7 @@ func TestAssignURL(t *testing.T) {
 func TestDeleteObject(t *testing.T) {
 	for _, filename := range tmpFiles {
 		splitted := strings.Split(filename, "/")
-		err := storage.DeleteObject(testBucket, splitted[len(splitted)-1])
+		err := storageService.DeleteObject(testBucket, splitted[len(splitted)-1])
 		if err != nil {
 			t.Error(err)
 		}
@@ -182,7 +182,7 @@ func TestDeleteObject(t *testing.T) {
 }
 
 func TestDeleteBucket(t *testing.T) {
-	err := storage.DeleteBucket(testBucket)
+	err := storageService.DeleteBucket(testBucket)
 	if err != nil {
 		t.Error(err)
 	}
