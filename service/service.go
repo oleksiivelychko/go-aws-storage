@@ -237,10 +237,7 @@ func (service *service) DeleteObject(bucket, key string) error {
 }
 
 func (service *service) DeleteBucket(bucket string) error {
-	_, err := service.client.DeleteBucket(&s3.DeleteBucketInput{
-		Bucket: aws.String(bucket),
-	})
-
+	_, err := service.client.DeleteBucket(&s3.DeleteBucketInput{Bucket: aws.String(bucket)})
 	return err
 }
 
