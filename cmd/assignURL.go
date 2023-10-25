@@ -10,7 +10,7 @@ var assignURLCmd = &cobra.Command{
 	Use:   "assign-url",
 	Short: "Generate a pre-signed URL for S3 object.",
 	Run: func(cmd *cobra.Command, args []string) {
-		storage, err := service.New(cfgAWS)
+		storage, err := service.New(configAWS)
 		if err != nil {
 			cobra.CheckErr(err)
 		}

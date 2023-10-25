@@ -10,7 +10,7 @@ var createBucketCmd = &cobra.Command{
 	Use:   "create-bucket",
 	Short: "Creates a new S3 bucket.",
 	Run: func(cmd *cobra.Command, args []string) {
-		storage, err := service.New(cfgAWS)
+		storage, err := service.New(configAWS)
 		if err != nil {
 			cobra.CheckErr(err)
 		}

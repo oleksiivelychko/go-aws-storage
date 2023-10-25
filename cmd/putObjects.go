@@ -12,7 +12,7 @@ var putObjectsCmd = &cobra.Command{
 	Use:   "put-objects",
 	Short: "Adds an object(-s) to the S3 bucket.",
 	Run: func(cmd *cobra.Command, args []string) {
-		storage, err := service.New(cfgAWS)
+		storage, err := service.New(configAWS)
 		if err != nil {
 			cobra.CheckErr(err)
 		}

@@ -10,7 +10,7 @@ var listBucketsCmd = &cobra.Command{
 	Use:   "list-buckets",
 	Short: "Returns a list of all buckets owned by this IAM user.",
 	Run: func(cmd *cobra.Command, args []string) {
-		storage, err := service.New(cfgAWS)
+		storage, err := service.New(configAWS)
 		if err != nil {
 			cobra.CheckErr(err)
 		}

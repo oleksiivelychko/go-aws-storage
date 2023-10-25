@@ -10,7 +10,7 @@ var getObjectCmd = &cobra.Command{
 	Use:   "get-object",
 	Short: "Retrieves objects from the S3 bucket.",
 	Run: func(cmd *cobra.Command, args []string) {
-		storage, err := service.New(cfgAWS)
+		storage, err := service.New(configAWS)
 		if err != nil {
 			cobra.CheckErr(err)
 		}
